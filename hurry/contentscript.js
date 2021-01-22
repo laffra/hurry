@@ -1,9 +1,9 @@
 (function Hurry() {
     const settings = {
         time: 45,
-        color: "green",
+        normal: "green",
         warning: "orange",
-        error: "red",
+        hurry: "red",
         label: "grey",
         top: 20,
         right: 20,
@@ -30,7 +30,7 @@
         const totalSeconds = (settings["time"] * 60);
         const ratio = elapsedSeconds / totalSeconds;
         const width = Math.min(settings["width"], settings["width"] * ratio);
-        const color = ratio > 0.5 ? ratio > 0.75 ? settings["error"] : settings["warning"] : settings["color"];
+        const color = ratio > 0.5 ? ratio > 0.75 ? settings["hurry"] : settings["warning"] : settings["normal"];
         $("#hurry-bar")
             .css("background", color)
             .css("width", width + "px");
@@ -64,7 +64,7 @@
                     .css("color", settings["label"]))
                 .append($("<div>")
                     .attr("id", "hurry-bar")
-                    .css("background", settings["color"])
+                    .css("background", settings["normal"])
                     .css("width", "0px")
                     .css("height", settings["height"] + "px"));
             settings["start"] = Date.now();
