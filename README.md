@@ -5,7 +5,7 @@ An extension for Google Slides that shows time remaining.
 ## Installation
 
 The extension has been submitted to the the Google Chrome Store. While it is being reviewed install by hand as follows:
-- Download and unzip the extension's zip. 
+- Clone this repository to your local machine 
 - Open chrome://extensions
 - Switch to Developer Mode
 - Install the extension using the "Load unpacked" button. 
