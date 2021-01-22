@@ -65,7 +65,7 @@
                 .append($("<div>")
                     .attr("id", "hurry-bar")
                     .css("background", settings["color"])
-                    .css("width", "10px")
+                    .css("width", "0px")
                     .css("height", settings["height"] + "px"));
             settings["start"] = Date.now();
             setInterval(update, 1000);
