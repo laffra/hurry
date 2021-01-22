@@ -19,17 +19,19 @@ Edit the Speaker Notes for slide 1 of your presentation. Add something like the 
 
 ```
 # time=45
-# color=pink
+# normal=pink
+# hurry=purple
 ```
 
 This tells Hurry:
  - Your presentation will last 45 minutes. 
- - A pink progress bar will be drawn.
+ - You asked for a pink progress bar.
+ - Once time is almost up, the progress bar will turn purple.
 
 The attributes you can set:
- - "normal" (string) : the color of the progress bar
- - "warning" (string) : the color when you are more than halfway 
- - "hurry" (string) : the color when you really have to hurry
+ - "normal" (string) : the color of the progress bar (up to 50%)
+ - "warning" (string) : the color when you are halfway (>50%) 
+ - "hurry" (string) : the color when you really have to hurry (>75%)
  - "label" (string) : the color of the label saying how many minutes are left
  - "top" (number) : how many pixels from the top the bar is shown
  - "right" (number) : how many pixels from the right the bar is shown
