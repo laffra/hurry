@@ -8,12 +8,12 @@ The extension has been submitted to the the Google Chrome Store. While it is bei
 - Clone this repository to your local machine 
 - Open chrome://extensions
 - Switch to Developer Mode
-- Install the extension using the "Load unpacked" button. 
+- Install the extension using the "Load unpacked" button, point to the "hurry/hurry" folder. 
 - Reload Google Slides
 
 ## Usage
 
-In the first slide of your presentation add the following:
+In the first slide of your presentation add something like the following:
 
 ```
 # time=45
