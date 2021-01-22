@@ -1,0 +1,22 @@
+{
+  "name": "Hurry",
+  "short_name": "Hurry",
+  "description": "Hurry - Google Slides Timer",
+  "version": "1.0",
+  "permissions": [ ],
+  "author": "Chris Laffra - laffra@gmail.com",
+  "content_scripts" : [
+    {
+      "matches" : [ "https://docs.google.com/presentation/*" ],
+      "js" : [ "jquery.js", "contentscript.js" ],
+      "all_frames" : true
+    }
+  ],
+  "background": { },
+  "page_action": {
+    "default_icon": { "38": "timer.png" },
+    "default_title": "Hurry - Google Slides Timer",
+    "default_popup": "popup.html"
+  },
+  "manifest_version": 2
+}
