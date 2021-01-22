@@ -25,12 +25,12 @@ This tells Hurry:
  - A pink progress bar will be drawn.
 
 The attributes you can set:
- - "color" <string> : the color of the progress bar
- - "warning" <string> : the color when you are more than halfway 
- - "error" <string> : the color when you really have to hurry
- - "label" <string> : the color of the label saying how many minutes are left
- - "top" <number> : how many pixels from the top the bar is shown
- - "right" <number> : how many pixels from the right the bar is shown
- - "width" <number> : width of the progress bar
- - "height" <number> : height of the progress bar
+ - "color" (string) : the color of the progress bar
+ - "warning" (string) : the color when you are more than halfway 
+ - "error" (string) : the color when you really have to hurry
+ - "label" (string) : the color of the label saying how many minutes are left
+ - "top" (number) : how many pixels from the top the bar is shown
+ - "right" (number) : how many pixels from the right the bar is shown
+ - "width" (number) : width of the progress bar
+ - "height" (number) : height of the progress bar
   
