@@ -96,7 +96,6 @@
         const pageNumber = parseInt($(".punch-filmstrip-selected-thumbnail-pagenumber").text());
         if (pageNumber != 1) return;
         const assignments = notes.split("#");
-        syncSettings();
         for (const assignment of assignments) {
             const parts = assignment.split("=");
             const name = parts[0];

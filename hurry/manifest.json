@@ -2,7 +2,7 @@
   "name": "Hurry",
   "short_name": "Hurry",
   "description": "Hurry - Google Slides Timer",
-  "version": "1.3",
+  "version": "1.4",
   "permissions": [ ],
   "author": "Chris Laffra - laffra@gmail.com",
   "content_scripts" : [
