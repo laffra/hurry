@@ -15,7 +15,7 @@ The extension has been submitted to the the Google Chrome Store. While it is bei
 
 ## Usage
 
-In the first slide of your presentation add something like the following:
+Edit the Speaker Notes for slide 1 of your presentation. Add something like the following:
 
 ```
 # time=45
