@@ -2,6 +2,8 @@
 
 An extension for Google Slides that shows time remaining.
 
+![screenshot](/screenshot.png)
+
 ## Installation
 
 The extension has been submitted to the the Google Chrome Store. While it is being reviewed install by hand as follows:
