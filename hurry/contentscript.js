@@ -54,11 +54,19 @@
         const totalSeconds = (settings.time * 60);
         const ratio = elapsedSeconds / totalSeconds;
         const mainWidth = $("#hurry-progressbar").width();
-        const width = Math.min(mainWidth, mainWidth * ratio);
+        const mainHeight = $("#hurry-progressbar").height();
+        if (mainWidth > mainHeight) {
+            const width = Math.min(mainWidth, mainWidth * ratio);
+            $("#hurry-innerbar")
+                .css("width", width);
+        } else {
+            const height = Math.min(mainHeight, mainHeight * ratio);
+            $("#hurry-innerbar")
+                .css("height", height);
+        }
         const color = ratio > 0.5 ? ratio > 0.75 ? settings.hurry : settings.warning : settings.normal;
         $("#hurry-innerbar")
-            .css("background", color)
-            .css("width", width);
+            .css("background", color);
         const secondsLeft = Math.round(Math.max(0, totalSeconds - elapsedSeconds));
         const minutesLeft = Math.round(secondsLeft / 60);
         $("#hurry-label")
@@ -96,20 +104,29 @@
                 .append($("<div>")
                     .attr("id", "hurry-innerbar")
                     .css("background", settings.normal)
-                    .css("width", "0px")
-                    .css("height", settings.height + "px"));
+                    .css("width", settings.width)
+                    .css("height", settings.height));
             settings.start = Date.now();
             setInterval(update, 1000);
         }
     }
 
     function loadNotes() {
-        var notes = $("#speakernotes").text();
-        if (!notes) return;
         const pageNumber = parseInt($(".punch-filmstrip-selected-thumbnail-pagenumber").text());
         if (pageNumber != 1) return;
+        const assignments = [];
+        $("#speakernotes .sketchy-text-content").each((_, lineElement) => {
+            const line = $(lineElement).text();
+            if (!line.startsWith("#")) return;
+            $(lineElement).find("text").each((_, textElement) => {
+                text = $(textElement).text();
+                if (text.indexOf("=") != -1) {
+                    assignments.push(text);
+                }
+            });
+        });
+        if (!assignments.length) return;
         clearSettings();
-        const assignments = notes.split("#");
         for (const assignment of assignments) {
             const parts = assignment.split("=");
             const name = parts[0];
