@@ -7,11 +7,19 @@
         label: "grey",
         top: 20,
         right: 20,
+        bottom: "",
+        left: "",
         width: 200,
         height: 5,
         border: "1px solid grey",
         start: Date.now()
     };
+    const opposites = {
+        left: "right",
+        right: "left",
+        top: "bottom",
+        bottom: "top",
+    }
     const urlParts = document.location.pathname.split("/");
     const docId = urlParts[urlParts.length - 2];
 
@@ -24,15 +32,15 @@
     }
 
     function syncSettings() {
-        for (const key in settings) {
-            const value = localStorage.getItem("hurry-" + docId + "-" + key);
-            settings[key] = (value === null) ? settings[key] : value;
+        for (const name in settings) {
+            const value = localStorage.getItem("hurry-" + docId + "-" + name);
+            settings[name] = (value === null) ? settings[name] : value;
         }
     }
 
     function clearSettings() {
-        for (const key in settings) {
-            localStorage.removeItem("hurry-" + docId + "-" + key);
+        for (const name in settings) {
+            localStorage.removeItem("hurry-" + docId + "-" + name);
         }
     }
 
@@ -40,22 +48,25 @@
 
     function update() {
         if (settings.time < 1) return;
-        $("#hurry-progressbar")
-            .css("visibility", "visible");
         const startMillis = settings.start;
         const nowMillis = Date.now();
-        const elapsedSeconds = (nowMillis - startMillis) / 1000;
+        const elapsedSeconds = Math.round((nowMillis - startMillis) / 1000);
         const totalSeconds = (settings.time * 60);
         const ratio = elapsedSeconds / totalSeconds;
-        const width = Math.min(settings.width, settings.width * ratio);
+        const mainWidth = $("#hurry-progressbar").width();
+        const width = Math.min(mainWidth, mainWidth * ratio);
         const color = ratio > 0.5 ? ratio > 0.75 ? settings.hurry : settings.warning : settings.normal;
         $("#hurry-innerbar")
             .css("background", color)
-            .css("width", width + "px");
+            .css("width", width);
         const secondsLeft = Math.round(Math.max(0, totalSeconds - elapsedSeconds));
         const minutesLeft = Math.round(secondsLeft / 60);
         $("#hurry-label")
             .text(minutesLeft > 0 ? minutesLeft + "m" : secondsLeft + "s");
+        var visibility = "visible";
+        if (ratio > 0.9 && (elapsedSeconds % 2)) visibility = "hidden";
+        $("#hurry-progressbar")
+            .css("visibility", visibility);
     }
 
     function showTimer() {
@@ -65,16 +76,19 @@
                 .attr("id", "hurry-progressbar")
                 .css("visibility", "hidden")
                 .css("position", "absolute")
+                .css("bottom", settings.bottom + "px")
+                .css("left", settings.left + "px")
                 .css("top", settings.top + "px")
                 .css("right", settings.right + "px")
-                .css("width", settings.width + "px")
-                .css("height", settings.height + "px")
+                .css("width", settings.width)
+                .css("height", settings.height)
                 .css("border", settings.border)
                 .appendTo($("body"))
                 .append($("<div>")
                     .attr("id", "hurry-label")
                     .css("font-family", "Arial")
-                    .css("font-size", (settings.height * 2) + "px")
+                    .css("font-size", Math.max(9, settings.height * 2) + "px")
+                    .css("margin", "2px")
                     .css("position", "absolute")
                     .css("top", "-14px")
                     .css("right", "0px")
@@ -90,18 +104,25 @@
     }
 
     function loadNotes() {
-        clearSettings();
         var notes = $("#speakernotes").text();
         if (!notes) return;
         const pageNumber = parseInt($(".punch-filmstrip-selected-thumbnail-pagenumber").text());
         if (pageNumber != 1) return;
+        clearSettings();
         const assignments = notes.split("#");
         for (const assignment of assignments) {
             const parts = assignment.split("=");
             const name = parts[0];
             if (!name) continue;
-            const value = isNaN(parseInt(parts[1])) ? parts[1] : parseInt(parts[1]);
+            const value = parts[1];
             localStorage.setItem("hurry-" + docId + "-" + name, value);
+            clearOpposite(name);
+        }
+    }
+
+    function clearOpposite(name) {
+        if (opposites[name]) {
+            localStorage.setItem("hurry-" + docId + "-" + opposites[name], "");
         }
     }
 
