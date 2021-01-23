@@ -11,7 +11,7 @@
         left: "",
         width: 200,
         height: 5,
-        border: "1px solid grey",
+        border: "grey",
         start: Date.now()
     };
     const opposites = {
@@ -90,7 +90,7 @@
                 .css("right", settings.right + "px")
                 .css("width", settings.width)
                 .css("height", settings.height)
-                .css("border", settings.border)
+                .css("border", "1px solid " + settings.border)
                 .appendTo($("body"))
                 .append($("<div>")
                     .attr("id", "hurry-label")
