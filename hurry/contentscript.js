@@ -12,7 +12,11 @@
         width: 200,
         height: 5,
         border: "grey",
-        start: Date.now()
+    };
+    const data = {
+        pageNumber: 0,
+        pages: {},
+        start: Date.now(),
     };
     const opposites = {
         left: "right",
@@ -48,7 +52,12 @@
 
     function update() {
         if (settings.time < 1) return;
-        const startMillis = settings.start;
+        updateProgressBar();
+        updateTimeOnPage();
+    }
+
+    function updateProgressBar() {
+        const startMillis = data.start;
         const nowMillis = Date.now();
         const elapsedSeconds = Math.round((nowMillis - startMillis) / 1000);
         const totalSeconds = (settings.time * 60);
@@ -75,6 +84,19 @@
         if (ratio > 0.9 && (elapsedSeconds % 2)) visibility = "hidden";
         $("#hurry-progressbar")
             .css("visibility", visibility);
+    }
+
+    function updateTimeOnPage() {
+        const pageNumber = getPageNumber();
+        var pageInfo = data.pages[pageNumber];
+        if (!pageInfo) {
+            pageInfo = data.pages[pageNumber] = {
+                number: pageNumber,
+                start: Math.round(Date.now() / 1000),
+                duration: 0,
+            }
+        }
+        pageInfo.duration = Math.round(Date.now() / 1000) - pageInfo.start;
     }
 
     function showTimer() {
@@ -106,7 +128,7 @@
                     .css("background", settings.normal)
                     .css("width", settings.width)
                     .css("height", settings.height));
-            settings.start = Date.now();
+            data.start = Date.now();
             setInterval(update, 1000);
             console.log("Hurry: Using the following settings:");
             for (const name in settings) {
@@ -115,8 +137,14 @@
         }
     }
 
+    function getPageNumber() {
+        const edit = $(".punch-filmstrip-selected-thumbnail-pagenumber").text();
+        const present = $("div[aria-posinset]").attr("aria-posinset");
+        return parseInt(edit || present);
+    }
+
     function loadNotes() {
-        const pageNumber = parseInt($(".punch-filmstrip-selected-thumbnail-pagenumber").text());
+        const pageNumber = getPageNumber();
         if (pageNumber != 1) return;
         const assignments = [];
         $("#speakernotes .sketchy-text-content").each((_, lineElement) => {
