@@ -48,6 +48,10 @@ See github.com/laffra/hurry for more details.
 # time=45 height=100% width=5 right=0 top=0
 ```
 
+```
+# time=60 - we have an hour. See: github.com/laffra/hurry
+```
+
 ## Accepted Attributes
 
 The color attributes you can set:
