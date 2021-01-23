@@ -108,6 +108,10 @@
                     .css("height", settings.height));
             settings.start = Date.now();
             setInterval(update, 1000);
+            console.log("Hurry: Using the following settings:");
+            for (const name in settings) {
+                console.log("  -", name, ":", settings[name]);
+            }
         }
     }
 
