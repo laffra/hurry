@@ -16,7 +16,6 @@
     const data = {
         pageNumber: 0,
         pages: {},
-        start: Date.now(),
     };
     const opposites = {
         left: "right",
@@ -28,11 +27,15 @@
     const docId = urlParts[urlParts.length - 2];
 
     function run() {
-        if ($("#punch-start-presentation-left").is(":visible")) {
-            loadNotes();
-        } else {
+        if (inPresentationMode()) {
             showTimer();
+        } else {
+            loadNotes();
         }
+    }
+
+    function inPresentationMode() {
+        return !$("#punch-start-presentation-left").is(":visible");
     }
 
     function syncSettings() {
@@ -47,8 +50,6 @@
             localStorage.removeItem("hurry-" + docId + "-" + name);
         }
     }
-
-    syncSettings();
 
     function update() {
         if (settings.time < 1) return;
@@ -92,11 +93,10 @@
         if (!pageInfo) {
             pageInfo = data.pages[pageNumber] = {
                 number: pageNumber,
-                start: Math.round(Date.now() / 1000),
-                duration: 0,
+                secondsOnPage: 0,
             }
         }
-        pageInfo.duration = Math.round(Date.now() / 1000) - pageInfo.start;
+        pageInfo.secondsOnPage += 1;
     }
 
     function showTimer() {
@@ -175,9 +175,22 @@
         }
     }
 
+    syncSettings();
+
+    $(window).unload(() => {
+        if (inPresentationMode()) {
+            console.log("Hurry: Here is your usage report:");
+            for (const pageNumber in data.pages) {
+                const seconds = data.pages[pageNumber].secondsOnPage;
+                console.log("  page", pageNumber,":", seconds, "seconds");
+            }
+        }
+    });
+
     var timer = setTimeout(run, 1);
     document.body.addEventListener('DOMSubtreeModified', function() {
         clearTimeout(timer);
         timer = setTimeout(run, 1);
     });
+
 })();
