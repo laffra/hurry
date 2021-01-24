@@ -14,8 +14,8 @@
         border: "grey",
     };
     const data = {
-        pageNumber: 0,
-        pages: {},
+        slideNumber: 0,
+        slides: {},
     };
     const opposites = {
         left: "right",
@@ -55,7 +55,7 @@
     function update() {
         if (settings.time < 1) return;
         updateProgressBar();
-        updateTimeOnPage();
+        updateTimeOnSlide();
     }
 
     function updateProgressBar() {
@@ -88,16 +88,16 @@
             .css("visibility", visibility);
     }
 
-    function updateTimeOnPage() {
-        const pageNumber = getPageNumber();
-        var pageInfo = data.pages[pageNumber];
-        if (!pageInfo) {
-            pageInfo = data.pages[pageNumber] = {
-                number: pageNumber,
-                secondsOnPage: 0,
+    function updateTimeOnSlide() {
+        const slideNumber = getSlideNumber();
+        var slideInfo = data.slides[slideNumber];
+        if (!slideInfo) {
+            slideInfo = data.slides[slideNumber] = {
+                number: slideNumber,
+                secondsOnSlide: 0,
             }
         }
-        pageInfo.secondsOnPage += 1;
+        slideInfo.secondsOnSlide += 1;
     }
 
     function showTimer() {
@@ -138,15 +138,15 @@
         }
     }
 
-    function getPageNumber() {
+    function getSlideNumber() {
         const edit = $(".punch-filmstrip-selected-thumbnail-pagenumber").text();
         const present = $("div[aria-posinset]").attr("aria-posinset");
         return parseInt(edit || present);
     }
 
     function loadNotes() {
-        const pageNumber = getPageNumber();
-        if (pageNumber != 1) return;
+        const slideNumber = getSlideNumber();
+        if (slideNumber != 1) return;
         const assignments = [];
         $("#speakernotes .sketchy-text-content").each((_, lineElement) => {
             const line = $(lineElement).text();
@@ -185,7 +185,7 @@
     
     function saveReport() {
         if (inPresentationMode()) {
-            localStorage.setItem(getStorageKey("report"), JSON.stringify(data.pages));
+            localStorage.setItem(getStorageKey("report"), JSON.stringify(data.slides));
         }
     }
 
@@ -225,9 +225,15 @@
     function showReport() {
         const report = JSON.parse(localStorage.getItem(getStorageKey("report")));
         var message = "Hurry: Latest presentation report:\n";
-        for (const pageNumber in report) {
-            const seconds = report[pageNumber].secondsOnPage;
-            message += "  page " + pageNumber + ":  " + seconds + " seconds\n";
+        for (const slideNumber in report) {
+            const seconds = report[slideNumber].secondsOnSlide;
+            var duration = seconds + " seconds";
+            if (seconds > 60) {
+                duration = Math.floor(seconds / 60) + " minute";
+                if (Math.floor(seconds / 60) > 1) duration += "s";
+                if (seconds % 60) duration += " and " + seconds % 60 + " seconds";
+            }
+            message += "  slide " + slideNumber + ":  " + duration + "\n";
         }
         console.log(message);
         alert(message);
