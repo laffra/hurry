@@ -30,6 +30,7 @@
         if (inPresentationMode()) {
             showTimer();
         } else {
+            checkReport();
             loadNotes();
         }
     }
@@ -164,28 +165,73 @@
             const name = parts[0];
             if (!name) continue;
             const value = parts[1];
-            localStorage.setItem("hurry-" + docId + "-" + name, value);
+            localStorage.setItem(getStorageKey(name), value);
             clearOpposite(name);
         }
     }
 
+    function getStorageKey(name) {
+        return "hurry-" + docId + "-" + name;
+    }
+
     function clearOpposite(name) {
         if (opposites[name]) {
-            localStorage.setItem("hurry-" + docId + "-" + opposites[name], "");
+            localStorage.setItem(getStorageKey(opposites[name]), "");
         }
     }
 
     syncSettings();
-
-    $(window).unload(() => {
+    $(window).unload(saveReport);
+    
+    function saveReport() {
         if (inPresentationMode()) {
-            console.log("Hurry: Here is your usage report:");
-            for (const pageNumber in data.pages) {
-                const seconds = data.pages[pageNumber].secondsOnPage;
-                console.log("  page", pageNumber,":", seconds, "seconds");
-            }
+            localStorage.setItem(getStorageKey("report"), JSON.stringify(data.pages));
         }
-    });
+    }
+
+    function checkReport() {
+        if ($("#hurry-report-link").length) return;
+        const report = localStorage.getItem(getStorageKey("report"));
+        if (!report) return;
+        const reportNode = $("a")
+            .attr("id", "hurry-report-link")
+            .addClass("hurry-report-link")
+            .attr("data-tooltip", "Show Hurry Report")
+            .attr("aria-label", "Show Hurry Report")
+            .attr("href", "#")
+            .css("display", "block")
+            .css("position", "absolute")
+            .css("text-decoration", "underline")
+            .css("top", "5px")
+            .css("cursor", "pointer")
+            .css("right", "5px")
+            .css("color", "#777")
+            .text("Hurry report is available")
+            .click(showReport)
+            .appendTo($("#speakernotes-workspace"));
+        setTimeout(removeAllCopiesAddedByGoogleSlides, 100);
+        console.log("Hurry: Added report link to speaker notes");
+    }
+
+    function removeAllCopiesAddedByGoogleSlides() {
+        $(".hurry-report-link").each((index, element) => {
+            const node = $(element);
+            if (node.attr("target") == "_blank" || node.attr("class") != "hurry-report-link") {
+                node.remove();
+            }
+        });
+    }
+
+    function showReport() {
+        const report = JSON.parse(localStorage.getItem(getStorageKey("report")));
+        var message = "Hurry: Latest presentation report:\n";
+        for (const pageNumber in report) {
+            const seconds = report[pageNumber].secondsOnPage;
+            message += "  page " + pageNumber + ":  " + seconds + " seconds\n";
+        }
+        console.log(message);
+        alert(message);
+    }
 
     var timer = setTimeout(run, 1);
     document.body.addEventListener('DOMSubtreeModified', function() {
