@@ -131,11 +131,16 @@
                     .css("height", settings.height));
             data.start = Date.now();
             setInterval(update, 1000);
-            console.log("Hurry: Using the following settings:");
-            for (const name in settings) {
-                console.log("  -", name, ":", settings[name]);
-            }
+            printSettings();
         }
+    }
+
+    function printSettings() {
+        var text = "Hurry: Presenting with these settings:\n";
+        for (const name in settings) {
+            text += "  - " + name + ": " + settings[name] + "\n";
+        }
+        console.log(text)
     }
 
     function getSlideNumber() {
@@ -246,3 +251,4 @@
     });
 
 })();
+
